@@ -4,6 +4,11 @@ SECG=`aws ec2 describe-security-groups \
           --query 'SecurityGroups[].[join(\`,\`,[GroupId,GroupName])]' \
           --output text`
 for sg in ${SECG[@]}; do
+  fields=$(echo $sg | awk -F ',' '{print NF}')
+  if [ $fields -ne  2 ]; then
+    continue
+  fi
+
   sg_id=$(echo ${sg} | cut -d ',' -f1)
   sg_name=$(echo ${sg} | cut -d ',' -f2)
    
